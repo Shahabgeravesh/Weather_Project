@@ -1,34 +1,44 @@
 import React, { useState, useEffect } from "react";
 import "./Weather.css";
+import axios from "axios";
 const Weather = () => {
   const [search, setsearch] = useState("London");
+  const [faren, setfaren] = useState(0);
+  const [weatherMood, setweatherMood] = useState([
+    "Cloudy",
+    "Rainy",
+    "Sunny",
+    "Thunderstorm",
+  ]);
+  const [weatherMoodIndex, setMood] = useState(0);
   const [temp, settemp] = useState({});
   const getWeather = async (event) => {
-    console.log(search);
+    setfaren(Math.floor(Math.random() * 300));
+    setMood(Math.floor(Math.random() * 3));
+    // console.log(search);
     try {
       let url = `http://api.openweathermap.org/data/2.5/weather?q=${search}&appid=8362d851b2c2fec17202d7f65fd5d529`;
+      axios.get(url).then((res) => {
+        const { data } = res;
+        const { temp, humidity, pressure } = data.main;
+        const { main: weathermood } = data.weather[0];
+        const { name } = data;
+        const { speed } = data.wind;
+        const { country, sunset } = data.sys;
 
-      const res = await fetch(url);
-      const data = await res.json();
-      console.log(data);
-      const { temp, humidity, pressure } = data.main;
-      const { main: weathermood } = data.weather[0];
-      const { name } = data;
-      const { speed } = data.wind;
-      const { country, sunset } = data.sys;
-
-      const myNewWeatherInfo = {
-        temp,
-        humidity,
-        pressure,
-        weathermood,
-        name,
-        speed,
-        country,
-        sunset,
-      };
-      settemp(myNewWeatherInfo);
-      console.log(myNewWeatherInfo);
+        const myNewWeatherInfo = {
+          temp,
+          humidity,
+          pressure,
+          weathermood,
+          name,
+          speed,
+          country,
+          sunset,
+        };
+        settemp(myNewWeatherInfo);
+        console.log(myNewWeatherInfo);
+      });
     } catch (error) {
       console.log(error);
     }
@@ -91,7 +101,7 @@ const Weather = () => {
                 borderRadius: "5px",
               }}
             >
-              {temp.temp} Farenheit
+              {faren} Farenheit
             </h2>
             <div
               style={{
@@ -109,7 +119,7 @@ const Weather = () => {
                   backgroundColor: "lightgoldenrodyellow",
                 }}
               >
-                {temp.weathermood}
+                {weatherMood[weatherMoodIndex]}
               </h4>
               <h4
                 style={{
@@ -118,7 +128,7 @@ const Weather = () => {
                   backgroundColor: "lightgreen",
                 }}
               >
-                {temp.name}, {temp.country}
+                {search}
               </h4>
             </div>
           </section>

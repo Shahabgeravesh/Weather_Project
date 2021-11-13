@@ -15,7 +15,7 @@ const Login = ({ setLoginUser }) => {
   };
   const login = () => {
     axios
-      .post("http://localhost:9002/login", user)
+      .post("/login", user)
       .then((response) => {
         alert(response.data.message);
         setLoginUser(response.data.user);
@@ -23,7 +23,7 @@ const Login = ({ setLoginUser }) => {
       })
       .catch((err) => {
         console.log("Error ", err);
-        alert("Login Unsucessful ");
+        alert("Login Unsuccessful ");
       });
   };
   return (
